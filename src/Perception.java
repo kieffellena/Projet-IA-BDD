@@ -46,7 +46,7 @@ public class Perception extends Mouvements{
 	}
 
 	//recherche le palet le plus proche et tourne vers ce palet.
-	public void rechercheEtTourner(int compteur) {
+	public float rechercheEtTourner(int compteur) {
 		//compteur 220 360 degrees ave une vitesse de 50
 		//compteur 110 180 degrees ave une vitesse de 50
 
@@ -86,6 +86,7 @@ public class Perception extends Mouvements{
 
 		int anglePalet = Math.round(indexMin);
 		efficaceTourner(anglePalet);
+		return minDist;
 	}
 
 	//distance parcouru
