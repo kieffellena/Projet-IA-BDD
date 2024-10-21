@@ -6,6 +6,16 @@ import lejos.utility.Delay;
 public class Mouvements {
 
 	protected static final int SPEED = 500;
+	private int compteurDeDegre;
+
+    public Mouvements() {
+        compteurDeDegre=0;
+    }
+
+    //modifie le compteur de degré pour savoir vers où va le robot sur la table (direction : 0 = vers l'en-but)
+	public void compteurDeDegre(int angle){
+        compteurDeDegre+=angle;
+    }
 
 	public  void avancer() { 
 		Motor.B.setSpeed(SPEED);
@@ -27,6 +37,7 @@ public class Mouvements {
 		int angleArr=(int) Math.round(4.44*angle);
 		Motor.D.rotate(angleArr); 
 		Delay.msDelay(2000); 
+        compteurDeDegre(angle);
 	}
 
 	public  void fermerPince() {
