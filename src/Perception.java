@@ -20,10 +20,17 @@ import lejos.utility.Delay;
 public class Perception extends Mouvements{
 	//ULTRASON
 	private EV3UltrasonicSensor ultrasonicSensor;
+	//Couleur
+	private EV3ColorSensor colorSensor;
+	private final static double ERROR = 0.01;
+	private SampleProvider average; 
 	private final static int vitessederotation = 50;
 
 	public Perception() {
 		ultrasonicSensor = new EV3UltrasonicSensor(SensorPort.S2); // allume sens0r, port 2 ultrason
+		 colorSensor = new EV3ColorSensor(SensorPort.S1);
+        	average = new MeanFilter(colorSensor.getRGBMode(), 1);
+        	colorSensor.setFloodlight(lejos.robotics.Color.WHITE);
 	}
 
 	//PERCEPTION INFRAROUGE
@@ -90,6 +97,26 @@ public class Perception extends Mouvements{
 	public void close() {
 		ultrasonicSensor.close(); // re-eteint
 	}
+
+	// Méthode pour détecter si le robot est sur une couleur similaire à celle de référence
+    	public boolean surCouleur(float[] couleurReference) {
+        float[] couleurActuelle = new float[average.sampleSize()];
+        average.fetchSample(couleurActuelle, 0);
+
+        // Calculer la différence scalaire entre la couleur actuelle et la couleur de référence
+        double scalaireDifference = scalaire(couleurActuelle, couleurReference);
+        System.out.println("Scalaire: " + scalaireDifference);
+
+        // Retourne vrai si la différence est inférieure à l'erreur acceptée
+        return scalaireDifference < ERROR;
+    }
+
+    // Fonction scalaire pour comparer deux couleurs (RGB)
+   	public static double scalaire(float[] v1, float[] v2) {
+       	 return Math.sqrt(Math.pow(v1[0] - v2[0], 2.0) +
+                         Math.pow(v1[1] - v2[1], 2.0) +
+                         Math.pow(v1[2] - v2[2], 2.0));
+    }
 
 	public static void main(String[] args) {
 		//pour tester rceherche dist palet a MUSE
