@@ -25,6 +25,7 @@ public class Perception extends Mouvements{
 	private final static double ERROR = 0.01;
 	private SampleProvider average; 
 	private final static int vitessederotation = 50;
+	private float mindistancePalet; 
 
 	public Perception() {
 		ultrasonicSensor = new EV3UltrasonicSensor(SensorPort.S2); // allume sens0r, port 2 ultrason
