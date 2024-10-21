@@ -5,9 +5,9 @@ import lejos.utility.Delay;
 
 public class Mouvements {
 
-	private static final int SPEED = 500;
+	protected static final int SPEED = 500;
 
-	public  void avancer() {
+	public  void avancer() { 
 		Motor.B.setSpeed(SPEED);
 		Motor.D.setSpeed(SPEED);
 		Motor.B.forward();
@@ -22,26 +22,23 @@ public class Mouvements {
 		Motor.D.backward();
 		Delay.msDelay(2000);
 	}
-	public  void tourner(int angle) {
+
+	public void tourner(int angle) {
 		int angleArr=(int) Math.round(4.44*angle);
 		Motor.D.rotate(angleArr); 
 		Delay.msDelay(2000); 
 	}
+
 	public  void fermerPince() {
 		Motor.C.setSpeed(SPEED); 
 		Motor.C.backward(); 
 		Delay.msDelay(1500);
-		
 	}
-	
-public  void ouvrirPince() {
-		Motor.C.setSpeed(SPEED);
-		Motor.C.forward();
-		Delay.msDelay(1500);
-}
-		
 
-	
-		    
+	public  void ouvrirPince() {
+		Motor.C.setSpeed(SPEED); 
+		Motor.C.forward(); 
+		Delay.msDelay(1500);
+	}
 
 }
