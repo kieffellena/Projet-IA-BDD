@@ -9,24 +9,18 @@ import lejos.robotics.SampleProvider;
 import lejos.robotics.filter.MeanFilter;
 import lejos.utility.Delay;
 
-//b roue droite
-//c les pinces
-//d roue gauche
-//backward fermer pinces
-//forward ouvrir pinces
+//Motor B roue droite
+//Motor C les pinces
+//Motor D roue gauche
 //+ sens inverse des aiguilles d'une montre
-//rotate
-//setSpeed 500 tres vite 100 pas vite
 //500 speed pour 2000
 //pour ouvrir les pinces 3500
-
 //moteur droit pour tourner a gauche
-//400 cest pile 90degrees
 
 public class Perception extends Mouvements{
 	//ULTRASON
 	private EV3UltrasonicSensor ultrasonicSensor;
-	private final static int vitessederotation = 100;
+	private final static int vitessederotation = 50;
 
 	public Perception() {
 		ultrasonicSensor = new EV3UltrasonicSensor(SensorPort.S2); // allume sens0r, port 2 ultrason
@@ -46,8 +40,8 @@ public class Perception extends Mouvements{
 
 	//recherche le palet le plus proche et tourne vers ce palet.
 	public void rechercheEtTourner(int compteur) {
-		//compteur 110 360 degrees ave une vitesse de 100
-		//compteur 50 180 degrees ave une vitesse de 100
+		//compteur 220 360 degrees ave une vitesse de 50
+		//compteur 110 180 degrees ave une vitesse de 50
 
 		Motor.B.setSpeed(vitessederotation);  
 		Motor.D.setSpeed(vitessederotation); 
@@ -84,35 +78,8 @@ public class Perception extends Mouvements{
 		System.out.println("Distance minimale détectée : " + minDist + " m à l'angle " + indexMin + "°");
 
 		int anglePalet = Math.round(indexMin);
-
-		//if(anglePalet<180) 
-		//si sur la droite
-		tourner(anglePalet);
-		/*
-		    else  {
-		    	//si doit aller a gauche
-		    	int nvAngle=360-anglePalet;
-	    		tourner(nvAngle);
-		    }
-		 */
+		efficaceTourner(anglePalet);
 	}
-	/*
-	 else {
-		    if(anglePalet<90) {
-		    	//tourne a droite
-		    	tourner(anglePalet);
-		    	System.out.print("AnglePalet "+anglePalet);
-		    }
-		    else {
-		    	//tourne vers gauche
-		    int nvAngle=180- anglePalet;
-	    	tourner(-nvAngle);
-	    	System.out.print("AnglePalet "+anglePalet);
-		    }
-	 } 
-	 }
-	 */
-
 
 	//distance parcouru
 	public float distanceParcouru(int duree) {
@@ -127,7 +94,7 @@ public class Perception extends Mouvements{
 	public static void main(String[] args) {
 		//pour tester rceherche dist palet a MUSE
 		Perception P = new Perception();
-		P.rechercheEtTourner(110);
+		//P.rechercheEtTourner(220);
 
 		//P.calibrerCouleur();
 		//P.afficherHistoriqueCouleurs();
@@ -137,7 +104,7 @@ public class Perception extends Mouvements{
 		//P.close(); 
 
 		/*
-            // Si la distance est inférieure ou égale à 0,3 m, faire tourner le robot a droite ?-> cest un autre robit
+            // Si la distance est inférieure ou égale à 0,3 m, faire tourner le robot a droite ? -> cest un autre robit
             if (distance <= 0.3) {
                 M.tourner(90);
 
