@@ -1,3 +1,4 @@
+
 import lejos.hardware.BrickFinder;
 import lejos.hardware.lcd.GraphicsLCD;
 import lejos.hardware.motor.Motor;
@@ -9,13 +10,9 @@ public class Mouvements {
 	private int compteurDeDegre;
 
     public Mouvements() {
-        compteurDeDegre=0;
+        compteurDeDegre=0; //robot dirigé vers la zone en-but
     }
 
-    //modifie le compteur de degré pour savoir vers où va le robot sur la table (direction : 0 = vers l'en-but)
-	public void compteurDeDegre(int angle){
-        compteurDeDegre+=angle;
-    }
 
 	public  void avancer() { 
 		Motor.B.setSpeed(SPEED);
@@ -37,7 +34,12 @@ public class Mouvements {
 		int angleArr=(int) Math.round(4.44*angle);
 		Motor.D.rotate(angleArr); 
 		Delay.msDelay(2000); 
-        compteurDeDegre(angle);
+        compteurDeDegre+=angle;
+	}
+
+	public void tournerVersZoneEnBut() {
+		tourner(-compteurDeDegre);
+		compteurDeDegre=0;
 	}
 
 	public  void fermerPince() {
