@@ -9,12 +9,12 @@ import lejos.robotics.SampleProvider;
 import lejos.robotics.filter.MeanFilter;
 import lejos.utility.Delay;
 
-//b ces roue droite
+//b roue droite
 //c les pinces
 //d roue gauche
-//backward fermer pince
-//forward ouvrir
-//+ sens inverse des aiguilles dune montre
+//backward fermer pinces
+//forward ouvrir pinces
+//+ sens inverse des aiguilles d'une montre
 //rotate
 //setSpeed 500 tres vite 100 pas vite
 //500 speed pour 2000
@@ -27,7 +27,6 @@ public class Perception extends Mouvements{
 	//ULTRASON
 	private EV3UltrasonicSensor ultrasonicSensor;
 	private final static int vitessederotation = 100;
-	private int compteurDeDegre;
 
 	public Perception() {
 		ultrasonicSensor = new EV3UltrasonicSensor(SensorPort.S2); // allume sens0r, port 2 ultrason
@@ -37,8 +36,6 @@ public class Perception extends Mouvements{
 	//PERCEPTION INFRAROUGE
 	//trouver Palet le plus proche, y aller. 
 
-	//modifie le compteur de degré pour savoir vers où va le robot sur la table
-	public int compteurDeDegre(
 	//capte une distance
 	public float distance() {
 		SampleProvider distanceProvider = ultrasonicSensor.getDistanceMode(); 
