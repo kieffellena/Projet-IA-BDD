@@ -88,12 +88,6 @@ public class Perception extends Mouvements{
 		int anglePalet = Math.round(indexMin);
 		efficaceTourner(anglePalet);
 	}
-	
-	public void tourneVersPalet(int compteur) {
-		float[] resultat= recherche(compteur);
-		int anglePalet = Math.round(resultat[1]);
-		efficaceTourner(anglePalet);
-	}
 
 	//distance parcouru
 	public float distanceParcouru(int duree) {
