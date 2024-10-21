@@ -69,8 +69,7 @@ public class Perception extends Mouvements{
 			Delay.msDelay(50);
 		}
 
-		Motor.B.stop();
-		Motor.D.stop();
+		stopRobot();
 
 		//trouve dist min et angle
 		float minDist = Float.MAX_VALUE; //instancie une valeur ++ pour quil puisse trouver, 
