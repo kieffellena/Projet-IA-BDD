@@ -53,5 +53,17 @@ public class Mouvements {
 		Motor.C.forward(); 
 		Delay.msDelay(1500);
 	}
-
+	
+	public void efficaceTourner(int angle) {
+		//si +180 // - 180
+		// +90 - 90
+		if(angle<180) //-180
+			//si sur la droite
+			tourner(angle);
+		else  {
+			//si doit aller a gauche
+			int nvAngle=360-angle;
+			tourner(nvAngle);
+		}
+	}
 }
