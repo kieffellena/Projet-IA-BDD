@@ -46,7 +46,6 @@ public class Perception extends Mouvements{
 		return sample[0];
 	}
 
-	float mindistance; 
 	//recherche le palet le plus proche et tourne vers ce palet.
 	public void rechercheEtTourner(int compteur) {
 		float []distAng = new float[2];
