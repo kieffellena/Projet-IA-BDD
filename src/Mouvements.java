@@ -1,4 +1,5 @@
 
+import javax.management.monitor.Monitor;
 import lejos.hardware.BrickFinder;
 import lejos.hardware.lcd.GraphicsLCD;
 import lejos.hardware.motor.Motor;
@@ -14,12 +15,17 @@ public class Mouvements {
     }
 
 
-	public  void avancer() { 
+	public  void avancer(float distance) { 
 		Motor.B.setSpeed(SPEED);
 		Motor.D.setSpeed(SPEED);
 		Motor.B.forward();
 		Motor.D.forward();
 		Delay.msDelay(2000);
+	}
+
+	public void stopRobot() {
+		Motor.B.stop();
+		Motor.D.stop();
 	}
 
 	public  void reculer() {
