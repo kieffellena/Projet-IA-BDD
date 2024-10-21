@@ -30,7 +30,6 @@ public class Perception extends Mouvements{
 
 	public Perception() {
 		ultrasonicSensor = new EV3UltrasonicSensor(SensorPort.S2); // allume sens0r, port 2 ultrason
-		compteur=0;
 	}
 
 	//PERCEPTION INFRAROUGE
