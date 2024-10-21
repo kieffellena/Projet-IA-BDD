@@ -46,7 +46,8 @@ public class Perception extends Mouvements{
 	}
 
 	//recherche le palet le plus proche et tourne vers ce palet.
-	public float rechercheEtTourner(int compteur) {
+	public float[] recherche(int compteur) {
+		float []distAng = new float[2];
 		//compteur 220 360 degrees ave une vitesse de 50
 		//compteur 110 180 degrees ave une vitesse de 50
 
@@ -83,10 +84,13 @@ public class Perception extends Mouvements{
 			}
 		}
 		System.out.println("Distance minimale détectée : " + minDist + " m à l'angle " + indexMin + "°");
-
-		int anglePalet = Math.round(indexMin);
+		return distAng;
+	}
+	
+	public void tourneVersPalet(int compteur) {
+		float[] resultat= recherche(compteur);
+		int anglePalet = Math.round(resultat[1]);
 		efficaceTourner(anglePalet);
-		return minDist;
 	}
 
 	//distance parcouru
