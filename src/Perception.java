@@ -88,6 +88,15 @@ public class Perception extends Mouvements{
 		int anglePalet = Math.round(indexMin);
 		efficaceTourner(anglePalet);
 	}
+	// verifie si la distance captée sur le moment est egale à la distance minimale
+	public boolean verifierDistance() {
+		 float distActuelle = distance();
+		 if (Math.abs(distActuelle - DistanceMinPalet) < 0.05) { 
+	            return true;
+	        } else {
+	            return false;
+	        }
+	    }
 
 	//distance parcouru
 	public float distanceParcouru(int duree) {
