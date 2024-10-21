@@ -27,14 +27,18 @@ public class Perception extends Mouvements{
 	//ULTRASON
 	private EV3UltrasonicSensor ultrasonicSensor;
 	private final static int vitessederotation = 100;
+	private int compteurDeDegre;
 
 	public Perception() {
 		ultrasonicSensor = new EV3UltrasonicSensor(SensorPort.S2); // allume sens0r, port 2 ultrason
+		compteur=0;
 	}
 
 	//PERCEPTION INFRAROUGE
 	//trouver Palet le plus proche, y aller. 
 
+	//modifie le compteur de degré pour savoir vers où va le robot sur la table
+	public int compteurDeDegre(
 	//capte une distance
 	public float distance() {
 		SampleProvider distanceProvider = ultrasonicSensor.getDistanceMode(); 
