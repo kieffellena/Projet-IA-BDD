@@ -45,9 +45,7 @@ public class Perception extends Mouvements{
 		// Distance en mètres !!!
 		return sample[0];
 	}
-
-	//recherche le palet le plus proche et tourne vers ce palet.
-	float mindistance; 
+ 
 	//recherche le palet le plus proche et tourne vers ce palet.
 	public void recherche(int compteur) {
 		float []distAng = new float[2];
@@ -85,7 +83,7 @@ public class Perception extends Mouvements{
 				indexMin=i;
 			}
 		}
-		mindistance = minDist;
+		DistanceMinPalet = minDist;
 		System.out.println("Distance minimale détectée : " + minDist + " m à l'angle " + indexMin + "°");
 		int anglePalet = Math.round(indexMin);
 		efficaceTourner(anglePalet);
