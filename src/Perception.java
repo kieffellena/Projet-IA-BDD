@@ -131,31 +131,4 @@ public class Perception extends Mouvements{
                          Math.pow(v1[2] - v2[2], 2.0));
     }
 
-	public static void main(String[] args) {
-		//pour tester rceherche dist palet a MUSE
-		Perception P = new Perception();
-		//P.rechercheEtTourner(220);
-
-		//P.calibrerCouleur();
-		//P.afficherHistoriqueCouleurs();
-
-		//Delay.msDelay(5000); 
-		//P.rechercheMinDist(360); //why not tourner
-		//P.close(); 
-
-		/*
-            // Si la distance est inférieure ou égale à 0,3 m, faire tourner le robot a droite ? -> cest un autre robit
-            if (distance <= 0.3) {
-                M.tourner(90);
-
-            if(distance>0.3) // palet donc fonce dessus
-
-          	else {
-                // Continuer d'avancer si pas d'obstacle
-               M.avancer();
-            }
-		 */
-
-	}
-
 }
