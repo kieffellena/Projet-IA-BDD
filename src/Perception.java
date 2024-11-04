@@ -32,6 +32,7 @@ public class Perception extends Mouvements{
 		 colorSensor = new EV3ColorSensor(SensorPort.S1);
         	average = new MeanFilter(colorSensor.getRGBMode(), 1);
         	colorSensor.setFloodlight(lejos.robotics.Color.WHITE);
+		DistanceMinPalet=0;
 	}
 
 	//PERCEPTION INFRAROUGE
