@@ -15,12 +15,13 @@ public class Mouvements {
     }
 
 
-	public  void avancer(float distance) { 
+	public void avancer(float distance) { 
 		Motor.B.setSpeed(SPEED);
 		Motor.D.setSpeed(SPEED);
 		Motor.B.forward();
 		Motor.D.forward();
-		Delay.msDelay(2000);
+		int delay = (int) Math.round(distance/0.045) ;
+		Delay.msDelay(delay);
 	}
 
 	public void stopRobot() {
@@ -28,12 +29,13 @@ public class Mouvements {
 		Motor.D.stop();
 	}
 
-	public  void reculer() {
+	public  void reculer(float distance) {
 		Motor.B.setSpeed(SPEED);
 		Motor.D.setSpeed(SPEED);
 		Motor.B.backward();
 		Motor.D.backward();
-		Delay.msDelay(2000);
+		int delay = (int) Math.round(distance/0.045) ;
+		Delay.msDelay(delay);
 	}
 
 	public void tourner(int angle) {
