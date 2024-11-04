@@ -101,12 +101,6 @@ public class Perception extends Mouvements{
 	        }
 	    }
 
-	//distance parcouru
-	public float distanceParcouru(int duree) {
-		//il fait en 2 secondes a 500 , 90 cm 
-		return SPEED * (duree); 
-	}
-
 	public void close() {
 		ultrasonicSensor.close(); // re-eteint
 	}
