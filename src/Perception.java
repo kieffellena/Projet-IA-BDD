@@ -86,8 +86,8 @@ public class Perception extends Mouvements{
 		}
 		DistanceMinPalet = minDist;
 		System.out.println("Distance minimale détectée : " + minDist + " m à l'angle " + indexMin + "°");
-		int anglePalet = Math.round(indexMin);
-		efficaceTourner(anglePalet);
+		float angleMin = (360.0f / 220) * indexMin;
+		tourner(angleMin-5);
 	}
 	
 	// verifie si la distance captée sur le moment est egale à la distance minimale
