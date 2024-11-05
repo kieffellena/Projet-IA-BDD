@@ -15,12 +15,15 @@ public class Mouvements {
     }
 
 
-	public void avancer(float distance) { 
+	//distance en cm
+	//2000 delay pr 0,4cm
+	public void avancer(double d) { 
 		Motor.B.setSpeed(SPEED);
 		Motor.D.setSpeed(SPEED);
 		Motor.B.forward();
 		Motor.D.forward();
-		int delay = (int) Math.round(distance/0.045) ;
+		int delay = (int) Math.round(d/50) ;
+		//2000 delay pr 40cm
 		Delay.msDelay(delay);
 	}
 
@@ -29,20 +32,21 @@ public class Mouvements {
 		Motor.D.stop();
 	}
 
-	public  void reculer(float distance) {
+	public  void reculer(double distance) {
 		Motor.B.setSpeed(SPEED);
 		Motor.D.setSpeed(SPEED);
 		Motor.B.backward();
 		Motor.D.backward();
-		int delay = (int) Math.round(distance/0.045) ;
+		int delay = (int) Math.round(distance/50) ;
 		Delay.msDelay(delay);
 	}
 
-	public void tourner(int angle) {
+	public void tourner(float angle) {
+		Motor.D.setSpeed(SPEED);
 		int angleArr=(int) Math.round(4.44*angle);
 		Motor.D.rotate(angleArr); 
 		Delay.msDelay(2000); 
-        compteurDeDegre+=angle;
+        	compteurDeDegre+=angle;
 	}
 
 	public void tournerVersZoneEnBut() {
