@@ -67,7 +67,7 @@ public class Mouvements {
 		else  {
 			//si doit aller a gauche
 			int nvAngle=360-angle;
-			tourner(nvAngle);
+			tourner(-nvAngle);
 		}
 	}
 	public static void main(String[] args) {
