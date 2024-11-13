@@ -59,6 +59,7 @@ public class Mouvements {
 	}
 
 	public void efficaceTourner(int angle) {
+		compteurDeDegre+=angle;
 		//si +180 // - 180
 		// +90 - 90
 		if(angle<180) //-180
