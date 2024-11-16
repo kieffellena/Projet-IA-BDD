@@ -58,7 +58,7 @@ public class Mouvements {
 		Delay.msDelay(3000);
 	}
 
-	public void efficaceTourner(int angle) {
+	public void efficaceTourner(float angle) {
 		compteurDeDegre+=angle;
 		//si +180 // - 180
 		// +90 - 90
@@ -67,10 +67,12 @@ public class Mouvements {
 			tourner(angle);
 		else  {
 			//si doit aller a gauche
-			int nvAngle=360-angle;
+			float nvAngle=360-angle;
 			tourner(-nvAngle);
 		}
 	}
+
+
 	public static void main(String[] args) {
 		Mouvements M = new Mouvements();
 		//M.tourner(360);
