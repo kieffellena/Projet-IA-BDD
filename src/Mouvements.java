@@ -6,6 +6,7 @@ public class Mouvements {
 
 	protected static final int SPEED = 500;
 	public int compteurDeDegre=0;
+	public boolean pinceOuverte=false;
 
 
 	//distance en cm
@@ -50,12 +51,14 @@ public class Mouvements {
 		Motor.C.setSpeed(500); 
 		Motor.C.backward(); 
 		Delay.msDelay(4000);
+		pinceOuverte=false;
 	}
 
 	public  void ouvrirPince() {
 		Motor.C.setSpeed(500); 
 		Motor.C.forward(); 
 		Delay.msDelay(3000);
+		pinceOuverte=true;
 	}
 
 	public void efficaceTourner(float angle) {
