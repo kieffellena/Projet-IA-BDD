@@ -77,7 +77,7 @@ public class Perception extends Mouvements{
 		float minDist = Float.MAX_VALUE; //instancie une valeur ++ pour quil puisse trouver, 
 		int indexMin = 0;
 		for (int i = 0; i < tabdistance.length; i++) {
-			if (tabdistance[i]==Double.POSITIVE_INFINITY || tabdistance[i]<0.05) //exception infini et robot
+			if (tabdistance[i]==Double.POSITIVE_INFINITY || tabdistance[i]<0.3) //exception infini et robot
 				continue;
 			if (tabdistance[i] < minDist) {  
 				minDist = tabdistance[i]; 
