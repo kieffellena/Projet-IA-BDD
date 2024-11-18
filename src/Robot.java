@@ -123,6 +123,13 @@ public class Robot {
 			return false;  // la Distance n'est pas la meme
 		}
 	}
+
+	public boolean check() {
+		if(mouvements.pinceOuverte==true) //vérif pince à fermer
+			mouvements.fermerPince();
+		mouvements.reculer(0.1); //reculer 10cm (avant de rechercher)
+		return true;
+	}
 	
 	
 	public static void main(String[] args) {
