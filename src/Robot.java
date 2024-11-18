@@ -124,13 +124,33 @@ public class Robot {
 		}
 	}
 
-	public boolean check() {
+	public void check() {
 		if(mouvements.pinceOuverte==true) //vérif pince à fermer
 			mouvements.fermerPince();
 		mouvements.reculer(0.1); //reculer 10cm (avant de rechercher)
-		return true;
 	}
-	
+
+	public void premierPalet() {
+		mouvements.avancer(40);
+		mouvements.stopRobot();
+		mouvements.ouvrirPince();
+		mouvements.stopRobot();
+		mouvements.avancer(20);
+		mouvements.stopRobot();
+		mouvements.fermerPince();
+		mouvements.stopRobot();
+		mouvements.avancer(240);
+		//mouvements.eviter();
+		mouvements.ouvrirPince();
+		mouvements.stopRobot();
+	}
+
+	public void enRoute() {
+		premierPalet();
+		// à revoir
+		avancerEtCapterPalet();
+		mouvements.stopRobot();
+	}
 	
 	public static void main(String[] args) {
 		// System.out.println("hello");
