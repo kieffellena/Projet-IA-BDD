@@ -8,7 +8,7 @@ public class Robot {
 	private Mouvements mouvements;
 	private Perception perception;
 
-	//private final static float[] ZONE_EN_BUT = {1.0f, 1.0f, 1.0f}; // Référence de couleur pour la zone d'en-but (blanche)
+	private final static float[] ZONE_EN_BUT = {0.1f, 0.1f, 0.1f}; // Référence de couleur pour la zone d'en-but (blanche)
 	//float lastDistance=0;
 
 	public Robot() {
@@ -16,16 +16,48 @@ public class Robot {
 		perception = new Perception();
 	}
 
+	public void enRoute() {
+		premierPalet();
+		avancerEtCapterPalet();
+		mouvements.stopRobot();
+	}
 
+	public void premierPalet() {
+		mouvements.ouvrirPince();
+		mouvements.stopRobot();
 
+		mouvements.avancer(65);
+		mouvements.stopRobot();
+
+		mouvements.fermerPince();
+		mouvements.stopRobot();
+
+		mouvements.avancer(200);
+		while(perception.distance()<=0.15f) {
+			eviterObstacle();
+		}
+		mouvements.stopRobot();
+
+		mouvements.ouvrirPince();
+		mouvements.stopRobot();
+		check();
+	}
+
+	public void check() {
+		mouvements.reculer(15); //reculer 10cm (avant de rechercher)
+		mouvements.stopRobot();
+		if(mouvements.pinceOuverte==true) //vérif pince à fermer
+			mouvements.fermerPince();
+		mouvements.stopRobot();
+	}
 
 	public void avancerEtCapterPalet() {
 		int tentativesRecherches=0;
 		perception.recherche(220);
 
-		if(!verifierDistance()) {
+		if(!perception.verifierDistance()) {
 			mouvements.stopRobot();
-			//avancerEtCapterPalet();  // Redémarrer la tentative à nouveau
+			avancerEtCapterPalet();  // Redémarrer la tentative à nouveau
 		}
 
 		else {	
@@ -41,16 +73,13 @@ public class Robot {
 
 				distanceActuelle = perception.distance();  // Met à jour la distance actuelle
 
-
 				// Si le robot capte un objet à une distance inferieur à 10cm, c'est un obstacle ou un autre robot
 				if (distanceActuelle <= 0.1f) {
 					eviterObstacle();  
 					tentativesRecherches ++;  
 					perception.recherche(220);  // Nouvelle recherche 
 					distanceCible = perception.getDistanceMinPalet();  // Met à jour la cible avec la nouvelle distance
-
 				}
-
 
 				// Si la distance ne diminue pas, on fais une nouvelle recherche
 				else if (distanceActuelle >= distanceCible + 0.30) {
@@ -62,8 +91,7 @@ public class Robot {
 						distanceCible = perception.getDistanceMinPalet();  // Met à jour la cible
 					} 
 					else { //c'est pour eviter d'avoir une boucle infini si le robot ne retrouve pas a chaque fois le palet 
-						mouvements.stopRobot(); 
-													
+						mouvements.stopRobot(); 				
 					}
 
 				} else {
@@ -72,8 +100,8 @@ public class Robot {
 			}
 			paletCapture = true;
 			mouvements.stopRobot();
+			System.out.print(mouvements.compteurDeDegre);
 			this.attraperPalet();  // methode pour capturer le palet
-			//tournerVersZoneEnBut();
 		} 
 
 	}
@@ -82,14 +110,10 @@ public class Robot {
 		mouvements.ouvrirPince();
 		mouvements.stopRobot();
 		mouvements.avancer(30);  // Avance de 25 cm pour capturer le palet
-
 		mouvements.stopRobot();
-
 		mouvements.fermerPince();
 		mouvements.stopRobot();
 	}
-
-
 
 	//si obstacle rencontré, tourne à droite et avance
 	public void eviterObstacle() {
@@ -101,27 +125,6 @@ public class Robot {
 		mouvements.tourner(-90);
 		mouvements.stopRobot();
 		mouvements.avancer(50);
-
-	}
-
-
-	public boolean verifierDistance() {
-
-		float distPerçu = perception.distance();  // Mesure la distance perçu actuelle
-		if (perception.getDistanceMinPalet() == Float.MAX_VALUE) {
-			System.out.println("Aucun palet détecté.");
-			return false;  // Aucun palet détecté
-		}
-		// on verifie la precision
-		if (Math.abs(distPerçu - perception.getDistanceMinPalet()) < 0.5f)  { 
-			System.out.println("?????????????????????");
-			Delay.msDelay(100);
-			return true;  // Distance est la meme ou à peu pres la meme
-		} else {
-			System.out.println("@@@@@@@@@Aucun palet détecté.");
-			Delay.msDelay(100);
-			return false;  // la Distance n'est pas la meme
-		}
 	}
 
 	public void avancerVersZoneEnBut() {
@@ -133,62 +136,12 @@ public class Robot {
 		mouvements.ouvrirPince();
 		check();
 	}
-	
-	public void check() {
-		mouvements.reculer(15); //reculer 10cm (avant de rechercher)
-		mouvements.stopRobot();
-		if(mouvements.pinceOuverte==true) //vérif pince à fermer
-			mouvements.fermerPince();
-		mouvements.stopRobot();
-	}
 
-	public void premierPalet() {
-		mouvements.ouvrirPince();
-		mouvements.stopRobot();
-		
-		mouvements.avancer(65);
-		mouvements.stopRobot();
-		
-		mouvements.fermerPince();
-		mouvements.stopRobot();
-		
-		mouvements.avancer(200);
-		while(perception.distance()<=0.15f) {
-			eviterObstacle();
-		}
-		mouvements.stopRobot();
-		
-		mouvements.ouvrirPince();
-		mouvements.stopRobot();
-		check();
-	}
-	
-
-	public void enRoute() {
-		premierPalet();
-		// à revoir
-		while (/*5min temps de compet*/) { 
-			avancerEtCapterPalet();
-			mouvements.stopRobot();
-			avancerVersZoneEnBut();
-			check();
-		}
-	}
-	
 	public static void main(String[] args) {
-		// System.out.println("hello");
 		Robot R = new Robot();
-		R.avancerEtCapterPalet();
 		//R.tournerVersZoneEnBut();
-		//R.verifierDistance();
-		//R.eviterObstacle();
-		// R.attraperPalet();
-		//  Mouvements M = new Mouvements();
-		//  M.avancer(5);
-		// M.fermerPince();
-		//Perception P = new Perception();
-		//P.rechercheEtTourner(220);
-		//M.avancer(50);
-
+		//R.premierPalet();
+		R.avancerEtCapterPalet();
+		//R.avancerVersZoneEnBut();
 	}
 }
