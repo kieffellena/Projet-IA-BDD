@@ -1,176 +1,80 @@
-import lejos.hardware.Button;
-import lejos.hardware.Sound;
+import lejos.hardware.BrickFinder;
+import lejos.hardware.lcd.GraphicsLCD;
 import lejos.hardware.motor.Motor;
-import lejos.hardware.port.SensorPort;
-import lejos.hardware.sensor.EV3UltrasonicSensor;
-import lejos.hardware.port.Port;
-import lejos.hardware.sensor.EV3ColorSensor;
-import lejos.robotics.SampleProvider;
-import lejos.robotics.filter.MeanFilter;
 import lejos.utility.Delay;
+public class Mouvements {
+	//distance en cm
+	//Motor D roue gauche
+	//Motor B roue droite
+	//Motor C les pinces
 
-public class Perception extends Mouvements{
-	//Capteur ULTRASON
-	private EV3UltrasonicSensor ultrasonicSensor;
+	protected static final int SPEED = 500;
+	public float compteurDeDegre;
+	public boolean pinceOuverte;
 
-	//Capteur COULEUR
-	private EV3ColorSensor colorSensor;
-	private SampleProvider average; 
-	private float DistanceMinPalet; 
-	private final static int vitessederotation = 50;
-	private final static double ERROR = 0.01;
-
-	public Perception() {
-		ultrasonicSensor = new EV3UltrasonicSensor(SensorPort.S2);
-		colorSensor = new EV3ColorSensor(SensorPort.S1);
-		average = new MeanFilter(colorSensor.getRGBMode(), 1);
-		colorSensor.setFloodlight(lejos.robotics.Color.WHITE);
-		DistanceMinPalet=0;
+	public Mouvements() {
+		compteurDeDegre=0;
+		pinceOuverte=false;
 	}
 
-	//capte une distance en m
-	public float distance() {
-		SampleProvider distanceProvider = ultrasonicSensor.getDistanceMode(); 
-		float[] sample = new float[distanceProvider.sampleSize()];
-		distanceProvider.fetchSample(sample, 0);
-		return sample[0];
+	public void avancer(double d) { 
+		Motor.B.setSpeed(SPEED);
+		Motor.D.setSpeed(SPEED);
+		Motor.B.forward();
+		Motor.D.forward();
+		int delay = (int) Math.round(d * 40);
+		Delay.msDelay(delay);
 	}
 
-	//verifie si la distance du palet est la meme que celle quon capte
-	public boolean verifierDistance() {
-		float distPerçu = distance();  // Mesure la distance perçu actuelle
-		if (getDistanceMinPalet() == Float.MAX_VALUE) {
-			return false;  // Aucun palet détecté
-		}
-		// on verifie la precision
-		if (Math.abs(distPerçu - getDistanceMinPalet()) < 0.5f)  { 
-			Delay.msDelay(100);
-			return true;  // Distance est la meme ou à peu pres la meme
-		} else {
-			Delay.msDelay(100);
-			return false;  // la Distance n'est pas la meme
+	public  void reculer(double d) {
+		Motor.B.setSpeed(SPEED);
+		Motor.D.setSpeed(SPEED);
+		Motor.B.backward();
+		Motor.D.backward();
+		int delay = (int) Math.round(d * 40);
+		Delay.msDelay(delay);
+	}
+
+	public void tourner(float angle) {
+		Motor.D.setSpeed(SPEED);
+		int angleArr=(int) Math.round(4.44*angle);
+		Motor.D.rotate(angleArr); 
+		Delay.msDelay(2000); 
+		compteurDeDegre+=angle;
+	}
+
+	public void efficaceTourner(float angle) {
+		if(angle<180) 
+			tourner(angle);
+		else  {
+			float nvAngle=360-angle;
+			tourner(-nvAngle);
 		}
 	}
 
-	//recherche le palet le plus proche et tourner vers ce palet
-	public float recherche(int compteur) {
-		float []distAng = new float[2];
-
-		Motor.B.setSpeed(vitessederotation);  
-		Motor.D.setSpeed(vitessederotation); 
-
-		Motor.B.backward(); 
-		Motor.D.forward(); 
-
-		int compt = 0; 
-		float[] tabdistance = new float[compteur]; // Tableau pour enregistrer les distances captées
-
-		//scanner son environnement et lenregistrer en tournant 360 d
-		while (compt < compteur) {
-			float distance = distance();
-			tabdistance[compt] = distance;
-			System.out.println("Angle: " + compt + "° | Distance: " + distance + " m");
-			compt++;
-			Delay.msDelay(54);
-		}
-
+	public void tournerVersZoneEnBut() {
 		stopRobot();
-
-		//trouve distance minimale et angle assoscie
-		float minDist = Float.MAX_VALUE; //instancie une valeur tres grande
-		int indexMin = 0;
-		for (int i = 0; i < tabdistance.length; i++) {
-			if (tabdistance[i]==Double.POSITIVE_INFINITY || tabdistance[i]<0.05) //exception infini et robot
-				continue;
-			if (tabdistance[i] < minDist) {  
-				minDist = tabdistance[i]; 
-				indexMin=i;
-			}
-		}
-
-		DistanceMinPalet = minDist;
-		System.out.println("Distance minimale détectée : " + minDist + " m à l'angle " + indexMin + "°");
-		float angleMin = (360.0f / 220) * indexMin;
-		efficaceTourner(angleMin+5f);
-		return DistanceMinPalet;
+		efficaceTourner(-compteurDeDegre);
 	}
 
-	public float getDistanceMinPalet() {
-		return this.DistanceMinPalet;
+	public void fermerPince() {
+		Motor.C.setSpeed(500); 
+		Motor.C.backward(); 
+		pinceOuverte=false;
+		Delay.msDelay(3000);
 	}
 
-	/*
-	//verifier si la distance captée sur le moment est egale à la distance minimale
-	public boolean verifier(float[] distances, int index, int debut, int fin, float seuil) {
-	    int taille = distances.length;
-
-	    for (int i = index + debut; i <= index + fin; i++) {
-	        if (i < 0 || i >= taille) continue; // si hors limites
-	        if (Math.abs(distances[i] - distances[index]) > seuil) {
-	            return false; // c'est pas un mur
-	        }
-	    }
-
-	    return true; // c'est un mur
-	}
-	 */
-
-	/*
-	 //si il y a un mur ne pas prendre en compte
-	public boolean estMur(float[] distances, int index, float seuil) {
-	    // differents possibiltes
-	    if (verifier(distances, index, -10, 0, seuil)) {
-	        return true; // Les 10 distances avant sont proches
-	    }
-	    if (verifier(distances, index, 0, 10, seuil)) {
-	        return true; // Les 10 distances après sont proches
-	    }
-	    if (verifier(distances, index, -5, 5, seuil)) {
-	        return true; 
-	    }
-	    if (verifier(distances, index, -3, 7, seuil)) {
-	        return true; 
-	    }
-	    if (verifier(distances, index, -2, 8, seuil)) {
-	        return true; 
-	    }
-	    if (verifier(distances, index, -8, 2, seuil)) {
-	        return true; 
-	    }
-	    if (verifier(distances, index, -7, 3, seuil)) {
-	        return true; 
-	    }
-	    return false; // Si aucune de ces conditions ne sont valides
-	}
-	 */
-
-	public void close() {
-		ultrasonicSensor.close(); // eteint le capteur
+	public void ouvrirPince() {
+		Motor.C.setSpeed(500); 
+		Motor.C.forward(); 
+		pinceOuverte=true;
+		Delay.msDelay(3000);
 	}
 
-	// Méthode pour détecter si le robot est sur une couleur similaire à la blanche
-	public boolean surCouleur(float[] couleurReference) {
-		float[] couleurActuelle = new float[average.sampleSize()];
-		average.fetchSample(couleurActuelle, 0);
-
-		// Calculer la différence scalaire entre la couleur actuelle et la couleur de référence
-		double scalaireDifference = scalaire(couleurActuelle, couleurReference);
-		System.out.println("Scalaire: " + scalaireDifference);
-
-		// Retourne vrai si la différence est inférieure à l'erreur acceptée
-		return scalaireDifference < ERROR;
-	}
-
-	// Fonction scalaire pour comparer deux couleurs (RGB)
-	public static double scalaire(float[] v1, float[] v2) {
-		return Math.sqrt(Math.pow(v1[0] - v2[0], 2.0) +
-				Math.pow(v1[1] - v2[1], 2.0) +
-				Math.pow(v1[2] - v2[2], 2.0));
-	}
-
-	public static void main(String[] args) {
-		Perception p = new Perception();
-		p.recherche(220);
+	public void stopRobot() {
+		Motor.B.flt(true);
+		Motor.D.flt(true);
+		Motor.C.flt(true);
 	}
 
 }
