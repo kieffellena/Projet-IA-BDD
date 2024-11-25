@@ -55,7 +55,6 @@ public class Mouvements {
 	public void tournerVersZoneEnBut() {
 		stopRobot();
 		efficaceTourner(-compteurDeDegre);
-		compteurDeDegre=0;
 	}
 
 	public void fermerPince() {
@@ -77,5 +76,5 @@ public class Mouvements {
 		Motor.D.flt(true);
 		Motor.C.flt(true);
 	}
-	
+
 }
