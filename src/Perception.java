@@ -92,7 +92,6 @@ public class Perception extends Mouvements{
 		System.out.println("Distance minimale détectée : " + minDist + " m à l'angle " + indexMin + "°");
 		float angleMin = (360.0f / 220) * indexMin;
 		efficaceTourner(angleMin+5f);
-		System.out.print(compteurDeDegre);
 		return DistanceMinPalet;
 	}
 
@@ -172,7 +171,6 @@ public class Perception extends Mouvements{
 	public static void main(String[] args) {
 		Perception p = new Perception();
 		p.recherche(220);
-		p.tournerVersZoneEnBut();
 	}
 
 }
