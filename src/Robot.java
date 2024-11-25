@@ -133,9 +133,10 @@ public class Robot {
 	public void avancerVersZoneEnBut() {
 		mouvements.tournerVersZoneEnBut();
 		while (perception.surCouleur(ZONE_EN_BUT)!=true) {
-			mouvements.avancer(1);
-			eviterObstacle(); 
+			mouvements.avancer(0.01);
+			//eviterObstacle(); 
 		}
+		mouvements.stopRobot();
 		mouvements.ouvrirPince();
 	}
 
