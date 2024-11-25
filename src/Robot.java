@@ -124,26 +124,45 @@ public class Robot {
 		}
 	}
 
+	public void avancerVersZoneEnBut() {
+		mouvements.tournerVersZoneEnBut();
+		while (perception.surCouleur(ZONE_EN_BUT)!=true) {
+			mouvements.avancer(1);
+			eviterObstacle(); 
+		}
+		mouvements.ouvrirPince();
+		check();
+	}
+	
 	public void check() {
+		mouvements.reculer(15); //reculer 10cm (avant de rechercher)
+		mouvements.stopRobot();
 		if(mouvements.pinceOuverte==true) //vérif pince à fermer
 			mouvements.fermerPince();
-		mouvements.reculer(0.1); //reculer 10cm (avant de rechercher)
+		mouvements.stopRobot();
 	}
 
 	public void premierPalet() {
-		mouvements.avancer(40);
-		mouvements.stopRobot();
 		mouvements.ouvrirPince();
 		mouvements.stopRobot();
-		mouvements.avancer(20);
+		
+		mouvements.avancer(65);
 		mouvements.stopRobot();
+		
 		mouvements.fermerPince();
 		mouvements.stopRobot();
-		mouvements.avancer(240);
-		//mouvements.eviter();
+		
+		mouvements.avancer(200);
+		while(perception.distance()<=0.15f) {
+			eviterObstacle();
+		}
+		mouvements.stopRobot();
+		
 		mouvements.ouvrirPince();
 		mouvements.stopRobot();
+		check();
 	}
+	
 
 	public void enRoute() {
 		premierPalet();
