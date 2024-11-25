@@ -11,18 +11,23 @@ public class Robot {
 	private final static float[] ZONE_EN_BUT = {0.1f, 0.1f, 0.1f}; // Référence de couleur pour la zone d'en-but (blanche)
 	//float lastDistance=0;
 
+	private int paletAttrape;
+
 	public Robot() {
 		mouvements = new Mouvements();
 		perception = new Perception();
+		paletAttrape=0;
 	}
 
 	public void enRoute() {
 		premierPalet();
-		avancerEtCapterPalet();
-		mouvements.stopRobot();
-		avancerVersZoneEnBut();
-		mouvements.stopRobot();
-		check();
+		while(paletAttrape<5) {	
+			avancerEtCapterPalet();
+			mouvements.stopRobot();
+			avancerVersZoneEnBut();
+			mouvements.stopRobot();
+			check();
+		}
 	}
 
 	public void premierPalet() {
@@ -36,9 +41,11 @@ public class Robot {
 		mouvements.stopRobot();
 
 		mouvements.avancer(200);
+		/*
 		while(perception.distance()<=0.15f) {
 			eviterObstacle();
 		}
+		 */
 		mouvements.stopRobot();
 
 		mouvements.ouvrirPince();
@@ -47,6 +54,7 @@ public class Robot {
 	}
 
 	public void check() {
+		paletAttrape++;
 		mouvements.reculer(15); //reculer 10cm (avant de rechercher)
 		mouvements.stopRobot();
 		if(mouvements.pinceOuverte==true) //vérif pince à fermer
@@ -142,8 +150,9 @@ public class Robot {
 
 	public static void main(String[] args) {
 		Robot R = new Robot();
-		//R.premierPalet();
-		R.avancerVersZoneEnBut();
+		R.enRoute();
+		//R.mouvements.tourner(90);
+		//R.avancerVersZoneEnBut();
 		//R.avancerVersZoneEnBut();
 	}
 }
