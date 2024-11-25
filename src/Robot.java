@@ -20,6 +20,9 @@ public class Robot {
 		premierPalet();
 		avancerEtCapterPalet();
 		mouvements.stopRobot();
+		avancerVersZoneEnBut();
+		mouvements.stopRobot();
+		check();
 	}
 
 	public void premierPalet() {
@@ -134,14 +137,12 @@ public class Robot {
 			eviterObstacle(); 
 		}
 		mouvements.ouvrirPince();
-		check();
 	}
 
 	public static void main(String[] args) {
 		Robot R = new Robot();
-		//R.tournerVersZoneEnBut();
 		//R.premierPalet();
-		R.avancerEtCapterPalet();
+		R.avancerVersZoneEnBut();
 		//R.avancerVersZoneEnBut();
 	}
 }
