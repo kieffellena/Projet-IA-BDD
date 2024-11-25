@@ -9,49 +9,52 @@ import lejos.robotics.SampleProvider;
 import lejos.robotics.filter.MeanFilter;
 import lejos.utility.Delay;
 
-//Motor B roue droite
-//Motor C les pinces
-//Motor D roue gauche
-//+ sens inverse des aiguilles d'une montre
-//500 speed pour 2000
-//pour ouvrir les pinces 3500
-//moteur droit pour tourner a gauche
-
 public class Perception extends Mouvements{
-	//ULTRASON
+	//Capteur ULTRASON
 	private EV3UltrasonicSensor ultrasonicSensor;
-	//Couleur
+
+	//Capteur COULEUR
 	private EV3ColorSensor colorSensor;
-	private final static double ERROR = 0.01;
 	private SampleProvider average; 
-	private final static int vitessederotation = 50;
 	private float DistanceMinPalet; 
+	private final static int vitessederotation = 50;
+	private final static double ERROR = 0.01;
 
 	public Perception() {
-		ultrasonicSensor = new EV3UltrasonicSensor(SensorPort.S2); // allume sens0r, port 2 ultrason
+		ultrasonicSensor = new EV3UltrasonicSensor(SensorPort.S2);
 		colorSensor = new EV3ColorSensor(SensorPort.S1);
 		average = new MeanFilter(colorSensor.getRGBMode(), 1);
 		colorSensor.setFloodlight(lejos.robotics.Color.WHITE);
 		DistanceMinPalet=0;
 	}
 
-	//PERCEPTION INFRAROUGE
-	//trouver Palet le plus proche, y aller. 
-
-	//capte une distance
+	//capte une distance en m
 	public float distance() {
 		SampleProvider distanceProvider = ultrasonicSensor.getDistanceMode(); 
 		float[] sample = new float[distanceProvider.sampleSize()];
-		distanceProvider.fetchSample(sample, 0); // Récupérer l'échantillon
-		// Distance en mètres !!!
+		distanceProvider.fetchSample(sample, 0);
 		return sample[0];
 	}
 
-	//recherche le palet le plus proche et tourne vers ce palet.
+	//verifie si la distance du palet est la meme que celle quon capte
+	public boolean verifierDistance() {
+		float distPerçu = distance();  // Mesure la distance perçu actuelle
+		if (getDistanceMinPalet() == Float.MAX_VALUE) {
+			return false;  // Aucun palet détecté
+		}
+		// on verifie la precision
+		if (Math.abs(distPerçu - getDistanceMinPalet()) < 0.5f)  { 
+			Delay.msDelay(100);
+			return true;  // Distance est la meme ou à peu pres la meme
+		} else {
+			Delay.msDelay(100);
+			return false;  // la Distance n'est pas la meme
+		}
+	}
+
+	//recherche le palet le plus proche et tourner vers ce palet
 	public float recherche(int compteur) {
 		float []distAng = new float[2];
-		//compteur 220 360 degrees ave une vitesse de 50
-		//compteur 110 180 degrees ave une vitesse de 50
 
 		Motor.B.setSpeed(vitessederotation);  
 		Motor.D.setSpeed(vitessederotation); 
@@ -62,7 +65,7 @@ public class Perception extends Mouvements{
 		int compt = 0; 
 		float[] tabdistance = new float[compteur]; // Tableau pour enregistrer les distances captées
 
-		// scanner son environnement et lenregistrer en tournant 360 d
+		//scanner son environnement et lenregistrer en tournant 360 d
 		while (compt < compteur) {
 			float distance = distance();
 			tabdistance[compt] = distance;
@@ -73,21 +76,23 @@ public class Perception extends Mouvements{
 
 		stopRobot();
 
-		//trouve dist min et angle
-		float minDist = Float.MAX_VALUE; //instancie une valeur ++ pour quil puisse trouver, 
+		//trouve distance minimale et angle assoscie
+		float minDist = Float.MAX_VALUE; //instancie une valeur tres grande
 		int indexMin = 0;
 		for (int i = 0; i < tabdistance.length; i++) {
-			if (tabdistance[i]==Double.POSITIVE_INFINITY || tabdistance[i]<0.3) //exception infini et robot
+			if (tabdistance[i]==Double.POSITIVE_INFINITY || tabdistance[i]<0.05) //exception infini et robot
 				continue;
 			if (tabdistance[i] < minDist) {  
 				minDist = tabdistance[i]; 
 				indexMin=i;
 			}
 		}
+
 		DistanceMinPalet = minDist;
 		System.out.println("Distance minimale détectée : " + minDist + " m à l'angle " + indexMin + "°");
 		float angleMin = (360.0f / 220) * indexMin;
-		efficaeTourner(angleMin+5f);
+		efficaceTourner(angleMin+5f);
+		System.out.print(compteurDeDegre);
 		return DistanceMinPalet;
 	}
 
@@ -95,16 +100,56 @@ public class Perception extends Mouvements{
 		return this.DistanceMinPalet;
 	}
 
+	/*
+	//verifier si la distance captée sur le moment est egale à la distance minimale
+	public boolean verifier(float[] distances, int index, int debut, int fin, float seuil) {
+	    int taille = distances.length;
 
+	    for (int i = index + debut; i <= index + fin; i++) {
+	        if (i < 0 || i >= taille) continue; // si hors limites
+	        if (Math.abs(distances[i] - distances[index]) > seuil) {
+	            return false; // c'est pas un mur
+	        }
+	    }
 
-	// verifie si la distance captée sur le moment est egale à la distance minimale
-	
+	    return true; // c'est un mur
+	}
+	 */
+
+	/*
+	 //si il y a un mur ne pas prendre en compte
+	public boolean estMur(float[] distances, int index, float seuil) {
+	    // differents possibiltes
+	    if (verifier(distances, index, -10, 0, seuil)) {
+	        return true; // Les 10 distances avant sont proches
+	    }
+	    if (verifier(distances, index, 0, 10, seuil)) {
+	        return true; // Les 10 distances après sont proches
+	    }
+	    if (verifier(distances, index, -5, 5, seuil)) {
+	        return true; 
+	    }
+	    if (verifier(distances, index, -3, 7, seuil)) {
+	        return true; 
+	    }
+	    if (verifier(distances, index, -2, 8, seuil)) {
+	        return true; 
+	    }
+	    if (verifier(distances, index, -8, 2, seuil)) {
+	        return true; 
+	    }
+	    if (verifier(distances, index, -7, 3, seuil)) {
+	        return true; 
+	    }
+	    return false; // Si aucune de ces conditions ne sont valides
+	}
+	 */
 
 	public void close() {
 		ultrasonicSensor.close(); // eteint le capteur
 	}
 
-	// Méthode pour détecter si le robot est sur une couleur similaire à celle de référence
+	// Méthode pour détecter si le robot est sur une couleur similaire à la blanche
 	public boolean surCouleur(float[] couleurReference) {
 		float[] couleurActuelle = new float[average.sampleSize()];
 		average.fetchSample(couleurActuelle, 0);
@@ -125,31 +170,9 @@ public class Perception extends Mouvements{
 	}
 
 	public static void main(String[] args) {
-		//pour tester rceherche dist palet a MUSE
-		Perception P = new Perception();
-
-		//P.recherche(220);
-		//P.verifierDistance();
-		//P.calibrerCouleur();
-		//P.afficherHistoriqueCouleurs();
-
-		//Delay.msDelay(5000); 
-		//P.rechercheMinDist(360); //why not tourner
-		//P.close(); 
-
-		/*
-            // Si la distance est inférieure ou égale à 0,3 m, faire tourner le robot a droite ? -> cest un autre robit
-            if (distance <= 0.3) {
-                M.tourner(90);
-
-            if(distance>0.3) // palet donc fonce dessus
-
-          	else {
-                // Continuer d'avancer si pas d'obstacle
-               M.avancer();
-            }
-		 */
-
+		Perception p = new Perception();
+		p.recherche(220);
+		p.tournerVersZoneEnBut();
 	}
 
 }
