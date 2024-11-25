@@ -148,8 +148,12 @@ public class Robot {
 	public void enRoute() {
 		premierPalet();
 		// à revoir
-		avancerEtCapterPalet();
-		mouvements.stopRobot();
+		while (/*5min temps de compet*/) { 
+			avancerEtCapterPalet();
+			mouvements.stopRobot();
+			avancerVersZoneEnBut();
+			check();
+		}
 	}
 	
 	public static void main(String[] args) {
