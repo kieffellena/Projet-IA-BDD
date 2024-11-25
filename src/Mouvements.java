@@ -4,6 +4,9 @@ import lejos.hardware.motor.Motor;
 import lejos.utility.Delay;
 public class Mouvements {
 	//distance en cm
+	//Motor D roue gauche
+	//Motor B roue droite
+	//Motor C les pinces
 
 	protected static final int SPEED = 500;
 	public float compteurDeDegre;
