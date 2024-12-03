@@ -2,23 +2,45 @@ import lejos.hardware.Button;
 import lejos.hardware.Sound;
 import lejos.hardware.motor.Motor;
 import lejos.utility.Delay;
-
+ 
+/**
+ * Une classe qui contient les méthodes pour que le robot interagisse avec son environnement et,
+ * mette en exécution la stratégie pour attraper le plus de palets.
+ */
 public class Robot {
-
+	
+	/**
+	 * Un attribut de type <code>Mouvements</code>
+	 */
 	private Mouvements mouvements;
+	/**
+	 * Un attribut de type <code>Perception</code>
+	 */
 	private Perception perception;
-
-	private final static float[] ZONE_EN_BUT = {0.1f, 0.1f, 0.1f}; // Référence de couleur pour la zone d'en-but (blanche)
-	//float lastDistance=0;
-
+	/**
+	 * Un tableau constant des valeurs flottantes qui référencie le code RGB de la couleur blanche
+	 */
+	private final static float[] ZONE_EN_BUT = {0.1f, 0.1f, 0.1f};
+	/**
+	 * Un entier qui a pour valeur le nombre de palet(s) attrapé(s)
+	 */
 	private int paletAttrape;
 
+	/**
+	 * Un constructeur qui instancie les attributs <code>mouvements</code> et <code>perception</code> et, 
+	 * qui initialise le nombre de palet attrapé à 0.
+	 */
 	public Robot() {
 		mouvements = new Mouvements();
 		perception = new Perception();
 		paletAttrape=0;
 	}
+	
 
+	/**
+	 * Une méthode qui met en route le robot pour qu'il élabore la stratégie 
+	 * en lançant des méthodes des classes <code>Robot</code> et <code>Mouvements</code>.
+	 */
 	public void enRoute() {
 		premierPalet();
 		while(paletAttrape<5) {	
@@ -30,6 +52,11 @@ public class Robot {
 		}
 	}
 
+	/**
+	 * Une méthode qui permet au robot d'aller chercher le premier palet et, 
+	 * de le déposer dans la zone d'en-but en utilisant <code>avancerVersZoneEnBut()</code> puis, 
+	 * de réinitialiser son état (pinces et position).
+	 */
 	public void premierPalet() {
 		mouvements.ouvrirPince();
 		mouvements.stopRobot();
@@ -41,11 +68,6 @@ public class Robot {
 		mouvements.stopRobot();
 
 		mouvements.avancer(200);
-		/*
-		while(perception.distance()<=0.15f) {
-			eviterObstacle();
-		}
-		 */
 		mouvements.stopRobot();
 
 		mouvements.ouvrirPince();
@@ -53,6 +75,10 @@ public class Robot {
 		check();
 	}
 
+	/**
+	 * Une méthode qui réinitialise l'état du robot lorsqu'il a déposé un palet dans la zone d'en-but. 
+	 * Il recule de 15 cm et vérifie que les pinces sont fermées et le fait si besoin.
+	 */
 	public void check() {
 		paletAttrape++;
 		mouvements.reculer(15); //reculer 10cm (avant de rechercher)
@@ -62,6 +88,11 @@ public class Robot {
 		mouvements.stopRobot();
 	}
 
+	/**
+	 * Une méthode qui permet au robot de chercher un palet et de s'adapter selon les situations; 
+	 * d'éviter tous les obstacles, de réitérer sa recherche s'il ne trouve pas de palet, 
+	 * d'aller attraper le palet lorsqu'il l'a trouvé. 
+	 */
 	public void avancerEtCapterPalet() {
 		int tentativesRecherches=0;
 		perception.recherche(220);
@@ -117,6 +148,10 @@ public class Robot {
 
 	}
 
+	/**
+	 * Une méthode qui permet au robot d'attraper le palet 
+	 * en utilisant des méthodes de <code>Mouvements</code>.
+	 */
 	public void attraperPalet() {
 		mouvements.ouvrirPince();
 		mouvements.stopRobot();
@@ -126,7 +161,10 @@ public class Robot {
 		mouvements.stopRobot();
 	}
 
-	//si obstacle rencontré, tourne à droite et avance
+	/**
+	 * Une méthode qui permet au robot d'éviter les obstacles lorsqu'il en rencontre. 
+	 * Il tourne à droite, avance et se retourne à gauche puis avance à nouveau.
+	 */
 	public void eviterObstacle() {
 		mouvements.stopRobot();
 		mouvements.tourner(90);
@@ -138,6 +176,13 @@ public class Robot {
 		mouvements.avancer(50);
 	}
 
+	/**
+	 * Une méthode qui permet au robot de se tourner dans la direction de la zone d'en-but 
+	 * en utilisant <code>tournerVersZoneEnBut()</code> dans <code>Mouvements</code> puis, 
+	 * d'avancer jusqu'à la zone d'en-but (lorsqu'il est sur la bande blanche) en utilisant 
+	 * <code>surCouleur(valeurs RGB couleur blanche)</code> dans <code>Perception</code> et 
+	 * de déposer le palet tout en évitant les obstacles.
+	 */
 	public void avancerVersZoneEnBut() {
 		mouvements.tournerVersZoneEnBut();
 		while (perception.surCouleur(ZONE_EN_BUT)!=true) {
