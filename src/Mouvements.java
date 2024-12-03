@@ -100,7 +100,7 @@ public class Mouvements {
 	 * Et met à jour la valeur de <code>pinceOuverte</code> à <b>false</b>.
 	 */
 	public void fermerPince() {
-		Motor.C.setSpeed(500); 
+		Motor.C.setSpeed(SPEED); 
 		Motor.C.backward(); 
 		pinceOuverte=false;
 		Delay.msDelay(3000);
@@ -111,7 +111,7 @@ public class Mouvements {
 	 * Et met à jour la valeur de <code>pinceOuverte</code> à <b>true</b>.
 	 */
 	public void ouvrirPince() {
-		Motor.C.setSpeed(500); 
+		Motor.C.setSpeed(SPEED); 
 		Motor.C.forward(); 
 		pinceOuverte=true;
 		Delay.msDelay(3000);
