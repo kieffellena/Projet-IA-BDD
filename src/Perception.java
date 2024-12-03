@@ -53,6 +53,7 @@ public class Perception extends Mouvements{
 		colorSensor.setFloodlight(lejos.robotics.Color.WHITE);
 		distanceMinPalet=0;
 	}
+
 	
 	/** 
 	 * Une méthode qui retourne la distance de l'objet perçu par le capteur ultrason.
