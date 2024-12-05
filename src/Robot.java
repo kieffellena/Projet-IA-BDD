@@ -191,9 +191,16 @@ public class Robot {
 	 */
 	public void avancerVersZoneEnBut() {
 		mouvements.tournerVersZoneEnBut();
-		while (perception.surCouleur(ZONE_EN_BUT)!=true) {
-			mouvements.avancer(0.01);
-			//eviterObstacle(); 
+		float distanceActuelle = perception.distance();  // Distance initiale objet
+		while (perception.surCouleur(ZONE_EN_BUT)!=true || distanceActuelle <=0.2f) {
+			mouvements.avancer(1);
+			Delay.msDelay(50);  // Délai pour stabiliser la mesure
+			// Si le robot capte un objet à une distance inferieur à 10cm, c'est un obstacle ou un autre robot
+			if (distanceActuelle <= 0.1f) {
+				eviterObstacle();
+				mouvements.tournerVersZoneEnBut();
+			}
+			distanceActuelle = perception.distance();  // Met à jour la distance actuelle
 		}
 		mouvements.stopRobot();
 		mouvements.ouvrirPince();
