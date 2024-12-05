@@ -36,7 +36,7 @@ public class Perception extends Mouvements{
 	 * Une constante entière qui a pour valeur la vitesse de rotation du robot 
 	 * pour la méthode <code>recherche</code>.
 	 */
-	private final static int VITESSE_DE_ROTATION = 50;
+	private final static int VITESSE_DE_ROTATION = 100;
 	/**
 	 * Une constante flottante qui a pour valeur la marge d'erreur acceptée des valeurs RGB de la couleur perçue.
 	 */
