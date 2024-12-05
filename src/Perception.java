@@ -40,7 +40,7 @@ public class Perception extends Mouvements{
 	/**
 	 * Une constante flottante qui a pour valeur la marge d'erreur acceptée des valeurs RGB de la couleur perçue.
 	 */
-	private final static double ERROR = 0.01;
+	private final static double ERROR = 0.05;
 
 	/**
 	 * Un constructeur qui indente les capteurs ultrason et infrarouge, 
@@ -94,44 +94,73 @@ public class Perception extends Mouvements{
 	 * @return un flottant de la distance du palet le plus proche
 	 */
 	public float recherche(int compteur) {
-
-		Motor.B.setSpeed(VITESSE_DE_ROTATION);  
+		Motor.B.setSpeed(VITESSE_DE_ROTATION); 
 		Motor.D.setSpeed(VITESSE_DE_ROTATION); 
-
 		Motor.B.backward(); 
 		Motor.D.forward(); 
 
 		int compt = 0; 
-		float[] tabdistance = new float[compteur]; // Tableau pour enregistrer les distances captées
+		float[] tabdistance = new float[compteur]; // Tableau pour enregistrer les distances captÃ©️es
 
-		//scanner son environnement et l'enregistrer en tournant 360°
+		//scanner son environnement et l'enregistrer en tournant 360Â°
+
 		while (compt < compteur) {
 			float distance = distance();
 			tabdistance[compt] = distance;
-			System.out.println("Angle: " + compt + "° | Distance: " + distance + " m");
+			System.out.println("Angle: " + compt + "Â° | Distance: " + distance + " m");
 			compt++;
 			Delay.msDelay(54);
 		}
-
 		stopRobot();
-
 		//trouve distance minimale et angle associe
 		float minDist = Float.MAX_VALUE; //instancie une valeur tres grande
 		int indexMin = 0;
 		for (int i = 0; i < tabdistance.length; i++) {
-			if (tabdistance[i]==Double.POSITIVE_INFINITY || tabdistance[i]<0.05) //exception infini et robot
+			if (tabdistance[i]==Double.POSITIVE_INFINITY || tabdistance[i]<0.) //exception infini et robot
 				continue;
-			if (tabdistance[i] < minDist) {  
+			if (i==25) { // si il y a 25 valeurs enregistrÃ©️s, on vÃ©️rifie que les 25 premiÃ¨res c pas un mur
+				float[] tabDistanceAVerif = new float[25];
+				for(int j=0; j<tabDistanceAVerif.length; j++) {
+					tabDistanceAVerif[j]=tabdistance[j];
+				}
+				if (estMur(tabDistanceAVerif))
+					continue;
+			}
+			else if (i>25) { // s'il y a + de 25 valeurs, on vÃ©️rifie vÃ©️rifie les 25 prÃ©️cÃ©️dentes si c pas un mur
+				float[] tabDistanceAVerif = new float[25];
+				int indiceTableau=0;
+				for(int j=i-25; j<i; j++) {
+					tabDistanceAVerif[indiceTableau]=tabdistance[j];
+					indiceTableau++;
+				}
+				if (estMur(tabDistanceAVerif))
+					continue;
+			}
+			else if (i==106) { // s'il y a + de 25 valeurs, on vÃ©️rifie vÃ©️rifie les 25 prÃ©️cÃ©️dentes si c pas un mur
+				float[] tabDistanceAVerif = new float[25];
+				for (int indiceTableau=0;indiceTableau<25;indiceTableau++) {
+					for(int j=95; j<107; j++) { //12 valeurs
+						tabDistanceAVerif[indiceTableau]=tabdistance[j];
+					}
+					for(int j=0; j<12; j++) { //13 valeurs 
+						tabDistanceAVerif[indiceTableau]=tabdistance[j];
+					}
+				}
+				if (estMur(tabDistanceAVerif))
+					continue;
+			}
+			if (tabdistance[i] < minDist) { 
 				minDist = tabdistance[i]; 
 				indexMin=i;
 			}
 		}
 
 		distanceMinPalet = minDist;
-		System.out.println("Distance minimale détectée : " + minDist + " m à l'angle " + indexMin + "°");
+		System.out.println("Distance minimale dÃ©️tectÃ©️e : " + minDist + " m Ã  l'angle " + indexMin + "Â°");
 		float angleMin = (360.0f / 107) * indexMin;
-		efficaceTourner(angleMin);
+		efficaceTourner(angleMin+10f);
 		return distanceMinPalet;
+
 	}
 
 	/**
@@ -140,6 +169,19 @@ public class Perception extends Mouvements{
 	 */
 	public float getDistanceMinPalet() {
 		return this.distanceMinPalet;
+	}
+	
+	public boolean estMur(float[] tabDistanceAVerif) {
+		for(int i=0; i<tabDistanceAVerif.length-1; i++) {
+			if (!distancesMemeIntervalle(tabDistanceAVerif[i], tabDistanceAVerif[i+1]))
+				return false;
+		}
+		return true;
+	}
+
+	public boolean distancesMemeIntervalle(float dist1, float dist2) {
+		float intervalle =5; // valeur de l'intervalle pour considÃ©️rer des valeurs proches
+		return (dist1>=dist2-intervalle && dist1<=dist2+intervalle) || (dist1<=dist2-intervalle && dist1>=dist2+intervalle);
 	}
 
 	/**
