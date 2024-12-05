@@ -99,7 +99,7 @@ public class Robot {
 	 * d'éviter tous les obstacles, de réitérer sa recherche s'il ne trouve pas de palet, 
 	 * d'aller attraper le palet lorsqu'il l'a trouvé. 
 	 */
-	public void avancerEtCapterPalet() {
+	 public void avancerEtCapterPalet() {
 		int tentativesRecherches=0;
 		perception.recherche(107);
 
@@ -119,20 +119,21 @@ public class Robot {
 				mouvements.avancer(1);  //approche progressive
 				Delay.msDelay(50);  // Délai pour stabiliser la mesure
 				distanceActuelle = perception.distance();  // Met à jour la distance actuelle
-/*
+
 				// Si le robot capte un objet à une distance inferieur à 10cm, c'est un obstacle ou un autre robot
-				if (distanceActuelle <= 0.25f || perception.surCouleur(ZONE_EN_BUT)==true) {
+				if (distanceActuelle <= 0.25f) {
 					eviterObstacle();  
 					tentativesRecherches ++;  
-					perception.recherche(220);  // Nouvelle recherche 
+					perception.recherche(107);  // Nouvelle recherche 
 					distanceCible = perception.getDistanceMinPalet();  // Met à jour la cible avec la nouvelle distance
 				}
-				*/
+
 				if (perception.surCouleur(ZONE_EN_BUT)==true) {
 					mouvements.stopRobot();
 					mouvements.tourner(90);
 					perception.recherche(53);
 				}
+
 				// Si la distance ne diminue pas, on fais une nouvelle recherche
 				if (distanceActuelle >= distanceCible + 0.33) {
 					mouvements.stopRobot(); 
