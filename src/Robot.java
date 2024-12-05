@@ -211,11 +211,4 @@ public class Robot {
 		mouvements.ouvrirPince();
 	}
 
-	public static void main(String[] args) {
-		Robot R = new Robot();
-		R.enRoute();
-		//R.mouvements.tourner(90);
-		//R.avancerVersZoneEnBut();
-		//R.avancerVersZoneEnBut();
-	}
 }
