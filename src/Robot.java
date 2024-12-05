@@ -66,8 +66,14 @@ public class Robot {
 
 		mouvements.fermerPince();
 		mouvements.stopRobot();
-
-		mouvements.avancer(200);
+		
+		mouvements.tourner(-50);
+		mouvements.stopRobot();
+		mouvements.avancer(30);
+		mouvements.stopRobot();
+		mouvements.tourner(50);
+		mouvements.stopRobot();
+		mouvements.avancer(180);
 		mouvements.stopRobot();
 
 		mouvements.ouvrirPince();
