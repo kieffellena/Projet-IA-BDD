@@ -129,6 +129,7 @@ public class Robot {
 				}
 				*/
 				if (perception.surCouleur(ZONE_EN_BUT)==true) {
+					mouvements.stopRobot();
 					mouvements.tourner(90);
 					perception.recherche(53);
 				}
