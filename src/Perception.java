@@ -116,7 +116,7 @@ public class Perception extends Mouvements{
 		float minDist = Float.MAX_VALUE; //instancie une valeur tres grande
 		int indexMin = 0;
 		for (int i = 0; i < tabdistance.length; i++) {
-			if (tabdistance[i]==Double.POSITIVE_INFINITY || tabdistance[i]<0.) //exception infini et robot
+			if (tabdistance[i]==Double.POSITIVE_INFINITY || tabdistance[i]<0.3) //exception infini et robot
 				continue;
 			if (i==25) { // si il y a 25 valeurs enregistrÃ©️s, on vÃ©️rifie que les 25 premiÃ¨res c pas un mur
 				float[] tabDistanceAVerif = new float[25];
