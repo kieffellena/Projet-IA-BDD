@@ -101,7 +101,7 @@ public class Robot {
 	 */
 	public void avancerEtCapterPalet() {
 		int tentativesRecherches=0;
-		perception.recherche(220);
+		perception.recherche(107);
 
 		if(!perception.verifierDistance()) {
 			mouvements.stopRobot();
@@ -115,27 +115,30 @@ public class Robot {
 			boolean paletCapture = false; 
 
 			// condition d'arret si le palet est à moins de 30cm
-			while (distanceActuelle > 0.35f && !paletCapture) {
+			while (distanceActuelle > 0.33f && !paletCapture) {
 				mouvements.avancer(1);  //approche progressive
 				Delay.msDelay(50);  // Délai pour stabiliser la mesure
-
 				distanceActuelle = perception.distance();  // Met à jour la distance actuelle
-
+/*
 				// Si le robot capte un objet à une distance inferieur à 10cm, c'est un obstacle ou un autre robot
-				if (distanceActuelle <= 0.1f) {
+				if (distanceActuelle <= 0.25f || perception.surCouleur(ZONE_EN_BUT)==true) {
 					eviterObstacle();  
 					tentativesRecherches ++;  
 					perception.recherche(220);  // Nouvelle recherche 
 					distanceCible = perception.getDistanceMinPalet();  // Met à jour la cible avec la nouvelle distance
 				}
-
+				*/
+				if (perception.surCouleur(ZONE_EN_BUT)==true) {
+					mouvements.tourner(90);
+					perception.recherche(53);
+				}
 				// Si la distance ne diminue pas, on fais une nouvelle recherche
-				else if (distanceActuelle >= distanceCible + 0.30) {
+				if (distanceActuelle >= distanceCible + 0.33) {
 					mouvements.stopRobot(); 
 					if(tentativesRecherches<=3) {
 						tentativesRecherches++;
 						mouvements.avancer(25);  // Avancer un peu pour ajustement
-						perception.recherche(220);  // Nouvelle recherche 
+						perception.recherche(107);  // Nouvelle recherche 
 						distanceCible = perception.getDistanceMinPalet();  // Met à jour la cible
 					} 
 					else { //c'est pour eviter d'avoir une boucle infini si le robot ne retrouve pas a chaque fois le palet 
@@ -150,7 +153,7 @@ public class Robot {
 			mouvements.stopRobot();
 			System.out.print(mouvements.compteurDeDegre);
 			this.attraperPalet();  // methode pour capturer le palet
-		} 
+		}  
 
 	}
 
