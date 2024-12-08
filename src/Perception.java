@@ -118,7 +118,7 @@ public class Perception extends Mouvements{
 		for (int i = 0; i < tabdistance.length; i++) {
 			if (tabdistance[i]==Double.POSITIVE_INFINITY || tabdistance[i]<0.3) //exception infini et robot
 				continue;
-			if (i==25) { // si il y a 25 valeurs enregistrÃ©️s, on vÃ©️rifie que les 25 premiÃ¨res c pas un mur
+			if (i==25) { // s'il y a 25 valeurs enregistrÃ©️s, on vÃ©️rifie que les 25 premiÃ¨res c pas un mur
 				float[] tabDistanceAVerif = new float[25];
 				for(int j=0; j<tabDistanceAVerif.length; j++) {
 					tabDistanceAVerif[j]=tabdistance[j];
@@ -171,6 +171,14 @@ public class Perception extends Mouvements{
 		return this.distanceMinPalet;
 	}
 	
+	/**
+	 * Une méthode qui est utilisée dans <code>recherche(compteur)</code> pour différencier les murs des palets.
+	 * Les caractéristiques pour que ce soit un mur sont que 25 valeurs consécutives de distances d'objet capté, 
+	 * soient les mêmes à 10cm près 
+	 * (intervalle large comme le robot tourne, les valeurs continues d'un objet peuvent beaucoup varier).
+	 * @param tabDistanceAVerif tableau des 25 valeurs flottantes des distances captées
+	 * @return retourne <b>true</b> si c'est un mur et <b>false</b> sinon
+	 */
 	public boolean estMur(float[] tabDistanceAVerif) {
 		for(int i=0; i<tabDistanceAVerif.length-1; i++) {
 			if (!distancesMemeIntervalle(tabDistanceAVerif[i], tabDistanceAVerif[i+1]))
@@ -179,6 +187,13 @@ public class Perception extends Mouvements{
 		return true;
 	}
 
+	/**
+	 * Une méthode qui compare deux distances 
+	 * afin de vérifier si elles sont équivalentes à une intervalle de 10cm près.
+	 * @param dist1 float de la première distance
+	 * @param dist2 float de la deuxième distance
+	 * @return retourne <b>true</b> si les distances sont équivalentes et <b>false</b> sinon
+	 */
 	public boolean distancesMemeIntervalle(float dist1, float dist2) {
 		float intervalle =5; // valeur de l'intervalle pour considÃ©️rer des valeurs proches
 		return (dist1>=dist2-intervalle && dist1<=dist2+intervalle) || (dist1<=dist2-intervalle && dist1>=dist2+intervalle);
